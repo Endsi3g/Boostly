@@ -1,0 +1,9 @@
+# Exemple de fichier key.properties
+# Copiez ce fichier vers key.properties et remplissez avec vos valeurs réelles
+# ⚠️ NE COMMITTEZ JAMAIS key.properties !
+
+storePassword=votre_mot_de_passe_keystore
+keyPassword=votre_mot_de_passe_cle
+keyAlias=upload
+storeFile=upload-keystore.jks
+
