@@ -1,12 +1,11 @@
-/**
- * BOOSTLY - Tests Widget
- * 
- * Tests des widgets de l'application.
- * 
- * @author BOOSTLY Team
- * @date 2025-01-09
- * @version 1.0.0
- */
+/// BOOSTLY - Tests Widget
+/// 
+/// Tests des widgets de l'application.
+/// 
+/// @author BOOSTLY Team
+/// @date 2025-01-09
+/// @version 1.0.0
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

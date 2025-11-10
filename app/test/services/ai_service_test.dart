@@ -1,12 +1,11 @@
-/**
- * BOOSTLY - Tests AIService
- * 
- * Tests du service d'intelligence artificielle.
- * 
- * @author BOOSTLY Team
- * @date 2025-01-09
- * @version 1.0.0
- */
+/// BOOSTLY - Tests AIService
+/// 
+/// Tests du service d'intelligence artificielle.
+/// 
+/// @author BOOSTLY Team
+/// @date 2025-01-09
+/// @version 1.0.0
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 

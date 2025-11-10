@@ -18,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'config/firebase_config.dart';
 import 'config/theme_config.dart';
@@ -39,8 +40,10 @@ import 'utils/constants.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialiser Hive pour le stockage local
-  await Hive.initFlutter();
+  // Initialiser Hive pour le stockage local (non disponible sur web)
+  if (!kIsWeb) {
+    await Hive.initFlutter();
+  }
 
   // Initialiser la sécurité
   SecurityUtils.initializeEncryption();
@@ -50,14 +53,20 @@ void main() async {
     options: FirebaseConfig.currentPlatform,
   );
 
-  // Initialiser Stripe
-  await StripeService.instance.initialize();
+  // Initialiser Stripe (compatible web)
+  try {
+    await StripeService.instance.initialize();
+  } catch (e) {
+    debugPrint('Stripe initialization error (non-blocking): $e');
+  }
 
-  // Configurer l'orientation de l'écran (portrait uniquement pour MVP)
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // Configurer l'orientation de l'écran (non disponible sur web)
+  if (!kIsWeb) {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
 
   // Initialiser les services
   await _initializeServices();
@@ -67,17 +76,31 @@ void main() async {
 
 /// Initialise tous les services nécessaires au démarrage
 Future<void> _initializeServices() async {
-  // Initialiser le service de notifications
-  await NotificationService.instance.initialize();
-
-  // Demander les permissions de notification
-  await NotificationService.instance.requestPermissions();
+  // Initialiser le service de notifications (non disponible sur web)
+  if (!kIsWeb) {
+    try {
+      await NotificationService.instance.initialize();
+      await NotificationService.instance.requestPermissions();
+    } catch (e) {
+      debugPrint('Notification service initialization error (non-blocking): $e');
+    }
+  }
 
   // Vérifier la disponibilité d'Ollama (si configuré)
+  // Note: Ollama localhost ne fonctionne pas sur le web, sauf si le serveur est accessible
   if (AIConfig.checkOllamaOnStartup && AIConfig.useOllama) {
-    final aiService = AIService();
-    await aiService.checkOllamaAvailability();
-    debugPrint('Ollama disponible: ${aiService.ollamaAvailable}');
+    // Sur le web, Ollama doit être sur un serveur accessible (pas localhost)
+    if (kIsWeb) {
+      debugPrint('Ollama: Sur le web, utilisez un serveur Ollama accessible (pas localhost)');
+    } else {
+      try {
+        final aiService = AIService();
+        await aiService.checkOllamaAvailability();
+        debugPrint('Ollama disponible: ${aiService.ollamaAvailable}');
+      } catch (e) {
+        debugPrint('Ollama check error (non-blocking): $e');
+      }
+    }
   }
 }
 

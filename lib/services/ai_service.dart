@@ -52,6 +52,14 @@ class AIService extends ChangeNotifier {
   Future<bool> checkOllamaAvailability() async {
     if (_ollamaAvailable != null) return _ollamaAvailable!;
     
+    // Sur le web, localhost ne fonctionne pas, utiliser Gemini directement
+    if (kIsWeb && _ollamaBaseUrl.contains('localhost')) {
+      _ollamaAvailable = false;
+      _currentProvider = 'gemini';
+      debugPrint('Ollama: localhost non disponible sur le web, utilisation de Gemini');
+      return false;
+    }
+    
     try {
       final url = Uri.parse('$_ollamaBaseUrl/api/tags');
       final response = await http.get(url).timeout(

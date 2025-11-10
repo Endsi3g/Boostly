@@ -1,12 +1,11 @@
-/**
- * BOOSTLY - Tests d'Intégration
- * 
- * Tests complets de l'application.
- * 
- * @author BOOSTLY Team
- * @date 2025-01-09
- * @version 1.0.0
- */
+/// BOOSTLY - Tests d'Intégration
+/// 
+/// Tests complets de l'application.
+/// 
+/// @author BOOSTLY Team
+/// @date 2025-01-09
+/// @version 1.0.0
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
